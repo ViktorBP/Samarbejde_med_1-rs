@@ -19,7 +19,7 @@ namespace ThirdsYearWebshopV2.Controllers
         public ProductsController(ProductDbContext context)
         {
             _context = context;
-            repo = new ProductRepoMVC(_context);
+            repo = new ProductRepo("ef", _context);
         }
 
         // GET: Products
