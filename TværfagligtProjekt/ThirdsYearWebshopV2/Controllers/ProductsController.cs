@@ -90,7 +90,7 @@ namespace ThirdsYearWebshopV2.Controllers
             {
                 try
                 {
-                    repo.UpdateProduct(product.Id);
+                    repo.UpdateProduct(product);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
