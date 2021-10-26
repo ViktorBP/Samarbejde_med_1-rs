@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ModelLibrary;
 using System.IO;
+using ThirdYearWebShop.Data;
 
 namespace Repositories
 {
@@ -11,12 +12,14 @@ namespace Repositories
 
         private List<Product> products = new List<Product>();
         private readonly string token;
+        private readonly ProductDbContext db;
 
-        public List<Product> Products { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public List<Product> Products { get; set; }
 
-        public ProductRepo(string token)
+        public ProductRepo(string token, ProductDbContext db)
         {
             this.token = token;
+            this.db = db;
         }
 
         public void AddProduct(Product product)
@@ -31,6 +34,10 @@ namespace Repositories
                     sw.WriteLine($"{product.Id};{product.Name};{product.Price};{product.Description}");
 
                     sw.Close();
+                    break;
+                case "ef":
+                    db.Products.Add(product);
+                    db.SaveChanges();
                     break;
                 default:
                     break;
@@ -104,6 +111,10 @@ namespace Repositories
 
                     sr.Close();
                     return product;
+                case "ef":
+                    var productMVC = db.Products
+                .Find(Id);
+                    return productMVC;
 
                 default:
                     break;
@@ -140,6 +151,13 @@ namespace Repositories
 
                     sr.Close();
                     return products;
+                case "ef":
+                    List<Product> productsMVC = new List<Product>();
+                    foreach (var item in db.Products)
+                    {
+                        productsMVC.Add(item);
+                    }
+                    return productsMVC;
 
                 default:
                     break;
@@ -210,6 +228,10 @@ namespace Repositories
                     }
                     AddProduct(product);
                     return product;
+                case "ef":
+                    db.Products.Update(db.Products.Find(Id));
+                    db.SaveChanges();
+                    return db.Products.Find(Id);
 
                 default:
                     break;
@@ -253,6 +275,10 @@ namespace Repositories
                     }
 
                     sw.Close();
+                    break;
+                case "ef":
+                    db.Products.Remove(db.Products.Find(Id));
+                    db.SaveChanges();
                     break;
                 default:
                     break;
