@@ -12,7 +12,7 @@ namespace Repositories
         public void AddProduct(Product product);
         public Product GetProduct(int Id);
         public List<Product> GetAllProducts();
-        public Product UpdateProduct(int Id);
+        public Product UpdateProduct(Product product);
         public void DeleteProduct(int Id);
     }
 }

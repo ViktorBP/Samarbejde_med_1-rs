@@ -166,7 +166,7 @@ namespace Repositories
             return null;
         }
 
-        public Product UpdateProduct(int Id)
+        public Product UpdateProduct(Product oldProduct)
         {
             switch (token)
             {
@@ -183,7 +183,7 @@ namespace Repositories
                     {
                         string[] args = sr.ReadLine().Split(';');
 
-                        if (Id == int.Parse(args[0]))
+                        if (product.Id == int.Parse(args[0]))
                         {
                             product.Id = int.Parse(args[0]);
                             product.Name = args[1];
@@ -229,9 +229,9 @@ namespace Repositories
                     AddProduct(product);
                     return product;
                 case "ef":
-                    db.Products.Update(db.Products.Find(Id));
+                    db.Products.Update(oldProduct);
                     db.SaveChanges();
-                    return db.Products.Find(Id);
+                    return db.Products.Find(oldProduct.Id);
 
                 default:
                     break;
