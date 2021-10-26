@@ -16,6 +16,11 @@ namespace Repositories
 
         public List<Product> Products { get; set; }
 
+        public ProductRepo(string token)
+        {
+            this.token = token;
+        }
+
         public ProductRepo(string token, ProductDbContext db)
         {
             this.token = token;
