@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ModelLibrary;
+using Repositories;
 using ThirdYearWebShop.Data;
 
 namespace ThirdsYearWebshopV2.Controllers
@@ -13,28 +14,26 @@ namespace ThirdsYearWebshopV2.Controllers
     public class ProductsController : Controller
     {
         private readonly ProductDbContext _context;
+        private IProductRepo repo;
 
         public ProductsController(ProductDbContext context)
         {
             _context = context;
+            repo = new ProductRepoMVC(_context);
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Products.ToListAsync());
+        public IActionResult Index()
+        {    
+            return View(repo.GetAllProducts());
         }
 
         // GET: Products/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var product = await _context.Products
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var product = repo.GetProduct(id);
+
             if (product == null)
             {
                 return NotFound();
@@ -54,26 +53,20 @@ namespace ThirdsYearWebshopV2.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Id,Price,Description")] Product product)
+        public IActionResult Create([Bind("Name,Id,Price,Description")] Product product)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
+                repo.AddProduct(product);
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
         }
 
         // GET: Products/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var product = await _context.Products.FindAsync(id);
+            var product = repo.GetProduct(id);
             if (product == null)
             {
                 return NotFound();
@@ -86,7 +79,7 @@ namespace ThirdsYearWebshopV2.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Id,Price,Description")] Product product)
+        public IActionResult Edit(int id, [Bind("Name,Id,Price,Description")] Product product)
         {
             if (id != product.Id)
             {
@@ -97,8 +90,7 @@ namespace ThirdsYearWebshopV2.Controllers
             {
                 try
                 {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
+                    repo.UpdateProduct(product.Id);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -117,15 +109,10 @@ namespace ThirdsYearWebshopV2.Controllers
         }
 
         // GET: Products/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var product = repo.GetProduct(id);
 
-            var product = await _context.Products
-                .FirstOrDefaultAsync(m => m.Id == id);
             if (product == null)
             {
                 return NotFound();
@@ -137,11 +124,9 @@ namespace ThirdsYearWebshopV2.Controllers
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
+            repo.DeleteProduct(id);
             return RedirectToAction(nameof(Index));
         }
 
