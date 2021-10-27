@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ModelLibrary
 {
-    public class Profile
+    public class Customer
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

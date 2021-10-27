@@ -54,21 +54,21 @@ namespace Repositories
             switch (token)
             {
                 case "txt":
-
-                    break;
-                default:
-                    break;
-            }
-            StreamWriter sw = new StreamWriter(ProductPath, append: true);
+                StreamWriter sw = new StreamWriter(ProductPath);
 
             foreach (var p in products)
             {
                 sw.WriteLine($"{p.Id};{p.Name};{p.Price};{p.Description}");
             }
             sw.Close();
+                    break;
+                default:
+                    break;
+            }
+
         }
 
-        public void RemoveAllProducts(List<Product> products)
+        public void RemoveAllProducts()
         {
             switch (token)
             {
@@ -135,7 +135,6 @@ namespace Repositories
                 case "txt":
                     StreamReader sr = new StreamReader(ProductPath);
                     List<Product> products = new List<Product>();
-                    Product product = new Product();
 
                     if (!File.Exists(ProductPath))
                     {
@@ -146,6 +145,7 @@ namespace Repositories
                     {
                         string[] args = sr.ReadLine().Split(';');
 
+                        Product product = new Product();
                         product.Id = int.Parse(args[0]);
                         product.Name = args[1];
                         product.Price = double.Parse(args[2]);

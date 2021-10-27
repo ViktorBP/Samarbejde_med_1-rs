@@ -20,27 +20,25 @@ namespace FørsteÅrs
             while (KeepRunning)
             {
                 Console.Clear();
-Console.WriteLine("Velkommen til vores webshop, hvad vil du gøre?");
-            Console.WriteLine("1. Gem produkterne");
-            Console.WriteLine("2. Vis liste af produkter");
-            Console.WriteLine("3. Tilføj et produkt");
+                Console.WriteLine("-------------------------------------");
+                Console.WriteLine("Velkommen til vores webshop, hvad vil du gøre? \n-------------------------------------\n");
+            Console.WriteLine("1. Vis liste af produkter");
+            Console.WriteLine("2. Tilføj et produkt");
+            Console.WriteLine("3. Ryd Listen");
 
             switch (Console.ReadLine())
             {
-                case "1":
-                    repo.SaveProducts(products);
-                    break;
 
-                case "2":
-                    repo.GetAllProducts();
-                    foreach (var item in repo.GetAllProducts())
+                case "1":
+                    List<Product> tempproducts = repo.GetAllProducts();
+                    foreach (Product p in tempproducts)
                     {
-                        Console.WriteLine(item.ToString()); 
+                        Console.WriteLine(p.ToString()); 
                     }
                         Console.ReadLine();
                     break;
 
-                case "3":
+                    case "2":
                     Console.WriteLine("Indtast navn på produkt");
                     string productName = Console.ReadLine();
                     Console.WriteLine("Indtast id på produkt");
@@ -49,12 +47,20 @@ Console.WriteLine("Velkommen til vores webshop, hvad vil du gøre?");
                     string productPrice = Console.ReadLine();
                     Console.WriteLine("Lav en beskrivelse på produkt");
                     string productDescription = Console.ReadLine();
+                    Console.WriteLine(productName + " er nu blevet tilføjet");
 
                     Product product1 = new Product(productName, int.Parse(productId), double.Parse(productPrice), productDescription);
 
                     products.Add(product1);
+                        repo.AddProduct(product1);
                     Console.ReadLine();
                     break;
+
+                    case "3":
+                        repo.RemoveAllProducts();
+                        Console.WriteLine("Listen er nu blevet ryddet");
+                        Console.ReadLine();
+                        break;
 
                 default:
                     Console.WriteLine("Ugyldigt input");

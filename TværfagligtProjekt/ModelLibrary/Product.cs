@@ -24,7 +24,7 @@ namespace ModelLibrary
 
         public override string ToString()
         {
-            return $"Product: {Name}\nDescription: {Description}\nPrice: {Price}\nId: {Id}\n\n";
+            return $"Product: {Name}\nDescription: {Description}\nPrice: {Price} Kr\nId: {Id}\n\n";
         }
     }
 }
